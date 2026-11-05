@@ -7,7 +7,7 @@
  * Every item uses a 5YLW date. See README.md for examples and publishing instructions.
  *
  * An example (NOT active) is:
- * { id: 'demo01', year: 1, month: 12, day: 7,
+ * { id: 'demo01', year: 2026, month: 12, day: 7,
  *   kind: 'development', title: 'Example milestone',
  *   description: 'Replace with a verified project update.',
  *   status: 'planned', url: '' }
