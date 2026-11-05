@@ -15,14 +15,14 @@ A complete static website compatible with GitHub Pages. The HTML (`index.html`) 
 
 These are drawn from the project resource *The 5 Years Leap Week Calendar_ano.pdf*:
 
-- Epoch: Gregorian **2025-12-21** = **5YLW Year 1 / Month 01 / Day 01** (the year-numbering choice is an implementation convention for this website).
+- Epoch: Gregorian **2025-12-21** = **5YLW Year 2026 / Month 01 / Day 01**. Year labels follow the corresponding civil year (not years elapsed since the epoch).
 - 13 standard months, 28 days each.
 - Every fifth year, add a 7-day 14th month, subject to two corrections:
   - no leap week if `year % 50 === 0`;
   - no leap week if `(year - 25) % 400 === 0`.
 - The 14th month is labeled **Hany's Week**; standard months remain numbered since the source reserves their naming rights.
 - The 5YLW grid is independent of Gregorian 12-month boundaries. The month range shown above the calendar provides the conversion.
-- The JS implementation supports Year 1 through Year 999. The far-future deep-time recalibration mentioned in the paper is outside the website's supported range.
+- The JS implementation supports Year 2026 through Year 3024 (999 year labels). The far-future deep-time recalibration mentioned in the paper is outside the website's supported range.
 
 ## Publishing monthly rewards and development steps
 
@@ -36,7 +36,7 @@ window.NOVABIA_SCHEDULE = {
   events: [
     {
       id: 'example-reward',
-      year: 1, month: 12, day: 7,
+      year: 2026, month: 12, day: 7,
       kind: 'reward',
       title: 'EXAMPLE: Reward announcement',
       description: 'Replace with the real reward, eligibility and claim details.',
@@ -45,7 +45,7 @@ window.NOVABIA_SCHEDULE = {
     },
     {
       id: 'example-milestone',
-      year: 1, month: 12, day: 21,
+      year: 2026, month: 12, day: 21,
       kind: 'development',
       title: 'EXAMPLE: Development checkpoint',
       description: 'Replace with a confirmed game design step.',
