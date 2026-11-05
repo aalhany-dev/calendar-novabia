@@ -1,6 +1,6 @@
 # Novabia Chronicle — calendar.novabia.dev
 
-A complete static website compatible with GitHub Pages. The HTML (`index.html`) is the single entry point; `styles.css`, `script.js` and `schedule-data.js` keep styling, behavior and announcements easy to edit. No backend is required.
+A complete static website compatible with GitHub Pages. The root HTML and the four clean-path route entry pages (`rewards/index.html`, `development/index.html`, `system/index.html`, `archive/index.html`) enable direct links on GitHub Pages without hashes. All share `styles.css`, `script.js`, and `schedule-data.js`; keep route HTML in sync if changing the shared page structure. No backend is required.
 
 ## What is included
 
@@ -70,7 +70,7 @@ If you prefer planning in Excel, keep a private workbook with the columns `id, y
 4. Under **Settings → Pages → Custom domain**, add `calendar.novabia.dev`. The included `CNAME` file matches it.
 5. In your DNS provider, create a CNAME record: **Host/Name:** `calendar` → **Target:** `YOUR-GITHUB-USERNAME.github.io` (replace with your actual GitHub username, without any `https://` or path).
 6. Wait for DNS verification and enable **Enforce HTTPS** when available.
-7. Verify `https://calendar.novabia.dev/#calendar`, `/#rewards`, `/#development`, `/#system`, and `/#archive`.
+7. Verify `https://calendar.novabia.dev/`, `/rewards/`, `/development/`, `/system/`, and `/archive/` as directly loaded pages.
 
 Do not point the `calendar` DNS CNAME to `novabia.dev` unless your hosting/DNS configuration explicitly requires a different architecture. A custom domain is configured per GitHub Pages repository.
 
@@ -78,7 +78,7 @@ Do not point the `calendar` DNS CNAME to `novabia.dev` unless your hosting/DNS c
 
 - Replace `favicon.png` only if you wish to change the approved orange Novabia seal.
 - Shared colors and layout are in `styles.css`, using the same navy/gold/Cinzel/Inter direction as the EIP site.
-- Navigation uses URL fragments, so each tab can be linked directly without special GitHub routing or rewrite rules.
+- Navigation uses direct, shareable clean paths (`/`, `/rewards/`, `/development/`, `/system/`, `/archive/`). Each subdirectory has an `index.html` so reloading a direct link works on GitHub Pages; historic `/#rewards`-style links are upgraded automatically.
 - The current month is computed in the visitor's local civil date; each 5YLW day is computed using a date-only UTC algorithm to avoid DST errors.
 
 ## Publish carefully
