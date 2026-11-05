@@ -2,6 +2,10 @@
 /** Novabia Chronicle: all sections are client-side and GitHub Pages compatible. */
 const MS_DAY = 86400000;
 const EPOCH_MS = Date.UTC(2025, 11, 21);
+// Year 2026 begins at the December 2025 epoch; 5YLW years use civil-style year labels.
+const FIRST_5YLW_YEAR = 2026;
+const LAST_5YLW_YEAR = FIRST_5YLW_YEAR + 998;
+const YEAR_PICKER_LAST = FIRST_5YLW_YEAR + 149;
 const TABS = ['calendar', 'rewards', 'development', 'system', 'archive'];
 const schedule = window.NOVABIA_SCHEDULE || { events: [] };
 const allEvents = Array.isArray(schedule.events) ? schedule.events.filter(isValidEvent) : [];
@@ -9,7 +13,7 @@ const weekdayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday
 const today = new Date();
 const todayUTC = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
 const todayFive = fromGregorianUTC(todayUTC);
-let visibleYear = todayFive ? todayFive.year : 1;
+let visibleYear = todayFive ? todayFive.year : FIRST_5YLW_YEAR;
 let visibleMonth = todayFive ? todayFive.month : 1;
 let selectedDay = todayFive ? todayFive.day : 1;
 const $ = id => document.getElementById(id);
@@ -19,24 +23,24 @@ const longGregorian = new Intl.DateTimeFormat('en-GB', {weekday:'long',day:'nume
 const safeText = value => String(value ?? '');
 
 function isLeapYear(year) {
-  return year > 0 && year % 5 === 0 && year % 50 !== 0 && (year - 25) % 400 !== 0;
+  return year >= FIRST_5YLW_YEAR && year % 5 === 0 && year % 50 !== 0 && (year - 25) % 400 !== 0;
 }
 function monthsInYear(year) { return isLeapYear(year) ? 14 : 13; }
 function yearDays(year) { return 364 + (isLeapYear(year) ? 7 : 0); }
 function monthDays(year, month) { return month === 14 && isLeapYear(year) ? 7 : 28; }
 function toGregorianUTC(year, month, day) {
-  if (!Number.isInteger(year) || year < 1 || year > 999 || !Number.isInteger(month) || month < 1 || month > monthsInYear(year) || !Number.isInteger(day) || day < 1 || day > monthDays(year,month)) return null;
+  if (!Number.isInteger(year) || year < FIRST_5YLW_YEAR || year > LAST_5YLW_YEAR || !Number.isInteger(month) || month < 1 || month > monthsInYear(year) || !Number.isInteger(day) || day < 1 || day > monthDays(year,month)) return null;
   let offset = 0;
-  for (let y=1; y<year; y++) offset += yearDays(y);
+  for (let y=FIRST_5YLW_YEAR; y<year; y++) offset += yearDays(y);
   offset += Math.min(13,month-1) * 28 + (day - 1);
   return EPOCH_MS + offset * MS_DAY;
 }
 function fromGregorianUTC(timestamp) {
   if (!Number.isFinite(timestamp) || timestamp < EPOCH_MS) return null;
   let rem = Math.floor((timestamp - EPOCH_MS) / MS_DAY);
-  let year = 1;
-  while (year < 999 && rem >= yearDays(year)) {rem -= yearDays(year); year++;}
-  if (year >= 999) return null;
+  let year = FIRST_5YLW_YEAR;
+  while (year <= LAST_5YLW_YEAR && rem >= yearDays(year)) {rem -= yearDays(year); year++;}
+  if (year > LAST_5YLW_YEAR) return null;
   const month = rem >= 364 ? 14 : Math.floor(rem / 28) + 1;
   const day = rem >= 364 ? rem - 364 + 1 : rem % 28 + 1;
   return {year, month, day};
@@ -93,10 +97,13 @@ function showEvents(target,events,emptyTitle,emptyBody) {
 }
 
 const yearSelect = $('yearSelect');
-for(let y=1;y<=150;y++){ const option=document.createElement('option');option.value=String(y);option.textContent=`Year ${String(y).padStart(2,'0')}`;yearSelect.append(option); }
+for(let y=FIRST_5YLW_YEAR;y<=YEAR_PICKER_LAST;y++){ const option=document.createElement('option');option.value=String(y);option.textContent=`Year ${y}`;yearSelect.append(option); }
 yearSelect.addEventListener('change',()=>{visibleYear=Number(yearSelect.value);visibleMonth=Math.min(visibleMonth,monthsInYear(visibleYear));selectedDay=1;renderCalendar();});
 function renderCalendar() {
-  yearSelect.value=String(visibleYear<=150?visibleYear:150);
+  if (!yearSelect.querySelector(`option[value="${visibleYear}"]`)) {
+    const option=document.createElement('option');option.value=String(visibleYear);option.textContent=`Year ${visibleYear}`;yearSelect.append(option);
+  }
+  yearSelect.value=String(visibleYear);
   const days=monthDays(visibleYear,visibleMonth);
   const start=toGregorianUTC(visibleYear,visibleMonth,1);
   const end=toGregorianUTC(visibleYear,visibleMonth,days);
@@ -105,8 +112,8 @@ function renderCalendar() {
   $('calendarFootnote').textContent=visibleMonth === 14 ? 'The seven-day intercalary month' : 'A perpetual four-week grid';
   $('monthProgress').textContent=`${String(visibleMonth).padStart(2,'0')} / ${String(monthsInYear(visibleYear)).padStart(2,'0')}`;
   $('yearNote').textContent=isLeapYear(visibleYear) ? 'Leap year · includes Hany’s Week' : '13 standard months';
-  $('prevMonth').disabled=visibleYear===1&&visibleMonth===1;
-  $('nextMonth').disabled=visibleYear===999&&visibleMonth===monthsInYear(visibleYear);
+  $('prevMonth').disabled=visibleYear===FIRST_5YLW_YEAR&&visibleMonth===1;
+  $('nextMonth').disabled=visibleYear===LAST_5YLW_YEAR&&visibleMonth===monthsInYear(visibleYear);
   const grid=$('calendarGrid');grid.replaceChildren();
   for(let day=1;day<=days;day++){
     const utc=start+(day-1)*MS_DAY;
@@ -148,19 +155,19 @@ function updateDayPanel(){
 function goMonths(direction){
   let m=visibleMonth+direction, y=visibleYear;
   if(m>monthsInYear(y)){y++;m=1;}
-  else if(m<1){y--;if(y<1)return;m=monthsInYear(y);}
-  if(y>999)return;
+  else if(m<1){y--;if(y<FIRST_5YLW_YEAR)return;m=monthsInYear(y);}
+  if(y>LAST_5YLW_YEAR)return;
   visibleMonth=m;selectedDay=1;renderCalendar();
 }
 $('prevMonth').addEventListener('click',()=>goMonths(-1));
 $('nextMonth').addEventListener('click',()=>goMonths(1));
-$('todayMonth').addEventListener('click',()=>{visibleYear=todayFive?.year||1;visibleMonth=todayFive?.month||1;selectedDay=todayFive?.day||1;renderCalendar();});
+$('todayMonth').addEventListener('click',()=>{visibleYear=todayFive?.year||FIRST_5YLW_YEAR;visibleMonth=todayFive?.month||1;selectedDay=todayFive?.day||1;renderCalendar();});
 
 if(todayFive){
   $('heroDay').textContent=String(todayFive.day).padStart(2,'0');
   $('heroMonth').textContent=labelMonth(todayFive.month).toUpperCase();
   $('heroYear').textContent=`YEAR ${String(todayFive.year).padStart(2,'0')} · 5YLW`;
-} else { $('heroDay').textContent='01';$('heroMonth').textContent='MONTH 01';$('heroYear').textContent='YEAR 01 · 5YLW'; }
+} else { $('heroDay').textContent='01';$('heroMonth').textContent='MONTH 01';$('heroYear').textContent=`YEAR ${FIRST_5YLW_YEAR} · 5YLW`; }
 $('heroGregorian').textContent=fmt(todayUTC,longGregorian);
 renderCalendar();
 showEvents($('rewardAnnouncements'),eventsByKind('reward'),'Reward announcements are coming.','Confirmed reward items, claim rules, and dates will appear here when published.');
