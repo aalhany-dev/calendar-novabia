@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080e18">
+  <meta name="description" content="The Novabia chronicle: monthly rewards, development updates, and the 5 Years Leap Week calendar.">
+  <meta property="og:title" content="Novabia Calendar | The Chronicle">
+  <meta property="og:description" content="Explore the Novabia 5YLW calendar, planned rewards and development updates.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calendar.novabia.dev/">
+  <link rel="canonical" href="https://calendar.novabia.dev/">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="schedule-data.js" defer></script>
+  <script src="script.js" defer></script>
+  <title>Novabia Calendar — The Chronicle</title>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <div class="topline"><div class="shell topline-inner"><span><span class="live-dot"></span> NOVABIA : LEGEND EVOLUTION</span><span>THE CHRONICLE <span class="topline-slash">/</span> FIVE YEARS LEAP WEEK</span></div></div>
+  <header class="header">
+    <div class="shell header-inner">
+      <a class="brand" href="#calendar" aria-label="Novabia calendar home"><img src="favicon.png" alt="Novabia N seal" width="52" height="52"><span class="brand-text"><strong>NOVABIA</strong><small>THE CHRONICLE</small></span></a>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-controls="primaryNav" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="nav" id="primaryNav" aria-label="Calendar sections">
+        <a href="#calendar" data-tab="calendar">This Month</a>
+        <a href="#rewards" data-tab="rewards">Rewards</a>
+        <a href="#development" data-tab="development">Development</a>
+        <a href="#system" data-tab="system">The 5YLW System</a>
+        <a href="#archive" data-tab="archive">Archive</a>
+      </nav>
+      <a class="top-cta" href="https://play.novabia.dev/" target="_blank" rel="noopener noreferrer">Test the game <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+  <main id="main" tabindex="-1">
+    <section class="page" id="calendar" aria-labelledby="calendar-title">
+      <div class="shell hero-layout">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="rule"></span> THE OFFICIAL DEVELOPMENT CHRONICLE</p>
+          <h1 id="calendar-title">A new chapter.<br><em>Every cycle.</em></h1>
+          <p class="hero-text">Follow Novabia’s journey through the 5 Years Leap Week calendar. One place for upcoming rewards, game-development milestones, and what comes next.</p>
+          <div class="hero-actions"><a href="#rewards" class="btn btn-gold">Explore rewards <span aria-hidden="true">↗</span></a><a href="#development" class="btn btn-outline">Development journal <span aria-hidden="true">→</span></a></div>
+          <p class="hero-disclaimer">Schedules appear here only after they're announced. No unpublished rewards or release dates are implied.</p>
+          <div class="hero-stats"><div><strong>13</strong><span>Standard months</span></div><div><strong>28</strong><span>Days per month</span></div><div><strong>04</strong><span>Weeks per month</span></div></div>
+        </div>
+        <div class="hero-display" aria-label="5YLW calendar today display">
+          <div class="display-top"><span>THE 5YLW CLOCK</span><span>EST. DEC 21, 2025</span></div>
+          <div class="display-middle"><span class="display-caption">TODAY IN THE CHRONICLE</span><strong id="heroDay">—</strong><span class="display-month" id="heroMonth">MONTH —</span><span class="display-year" id="heroYear">YEAR —</span></div>
+          <div class="orbit" aria-hidden="true"><div class="orbit-inner"></div><div class="orbit-core">N</div></div>
+          <div class="display-bottom"><span id="heroGregorian">Loading Gregorian date…</span><span class="display-motto">ONE WORLD. MANY PATHS.</span></div>
+        </div>
+      </div>
+      <div class="shell calendar-zone">
+        <div class="zone-header"><div><p class="eyebrow tiny">THE MONTHLY COMPASS</p><h2>The monthly calendar</h2><p>Pick a date to view its Gregorian equivalent and any published activity.</p></div><div class="legend"><span><i class="dot-reward"></i> Reward</span><span><i class="dot-dev"></i> Development</span><span><i class="dot-update"></i> Update</span></div></div>
+        <div class="calendar-layout">
+          <div class="calendar-panel">
+            <div class="calendar-toolbar"><div><div class="micro-label">SELECTED CYCLE</div><h3 id="monthTitle">Month — <span>Year —</span></h3><p id="monthRange">—</p></div><div class="month-controls"><label class="visually-hidden" for="yearSelect">Jump to 5YLW year</label><select id="yearSelect" aria-label="Jump to 5YLW year"></select><button id="prevMonth" type="button" aria-label="Previous 5YLW month">‹</button><button id="todayMonth" type="button" class="today-control">Today</button><button id="nextMonth" type="button" aria-label="Next 5YLW month">›</button></div></div>
+            <div class="weekday-row" aria-hidden="true"><span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span></div>
+            <div id="calendarGrid" class="calendar-grid" aria-label="5YLW month dates"></div>
+            <div class="calendar-bottom"><span id="calendarFootnote">A perpetual four-week grid</span><span id="monthProgress">—</span></div>
+          </div>
+          <aside class="day-panel" aria-labelledby="dayPanelHeading"><div class="side-accent"></div><p class="micro-label">DAY DETAILS</p><div class="day-identity"><span id="selectedDayNumber">—</span><div><h3 id="dayPanelHeading">Select a day</h3><p id="selectedGregorian">—</p></div></div><div class="day-sep"></div><div id="dayEvents" aria-live="polite"><p class="day-placeholder">Choose a date to view activity.</p></div><div class="day-panel-foot"><span>NEW ANNOUNCEMENTS</span><strong id="eventCount">0 PUBLISHED</strong></div></aside>
+        </div>
+        <div class="month-strip-header"><span class="micro-label">EXPLORE THE YEAR</span><span id="yearNote">13 standard months</span></div>
+        <div class="month-strip" id="monthStrip" aria-label="Choose a 5YLW month"></div>
+        <p class="calendar-note">5YLW year numbering on this site begins at Year 1 on December 21, 2025. Month names remain numbered until official names are assigned.</p>
+      </div>
+      <div class="shell lower-band"><div><span class="micro-label">STAY PART OF THE JOURNEY</span><h2>Play the story as it unfolds.</h2><p>Test the vertical slice, share your experience, and help guide the next chapter.</p></div><div class="band-actions"><a href="https://play.novabia.dev/" class="btn btn-gold" target="_blank" rel="noopener noreferrer">Test the vertical slice ↗</a><a href="https://docs.google.com/forms/d/e/1FAIpQLSfmMCT3sIPX58XtDPNlVVBDko5IoXiEAiZLQg-_gIgYaRyeRQ/viewform" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Give feedback ↗</a></div></div>
+    </section>
+    <section class="page" id="rewards" aria-labelledby="rewards-title" hidden>
+      <div class="shell page-heading"><p class="eyebrow"><span class="rule"></span> THE REWARD COMPASS</p><h1 id="rewards-title">Seven days.<br><em>A rising reward.</em></h1><p>Novabia’s proposed seven-day reward presentation: four opening days, two elevated days, and one grand finale. Specific items and availability will be published when confirmed.</p></div>
+      <div class="shell section-body"><div class="section-caption"><div><span class="micro-label">REWARD DESIGN FORMAT</span><h2>A week worth returning for</h2></div><span class="draft-tag">DESIGN FORMAT · NOT A LIVE OFFER</span></div>
+        <div class="reward-grid">
+          <div class="reward-day small"><span>DAY 01</span><div class="reward-glyph">✦</div><strong>First steps</strong><small>1 reward slot</small></div>
+          <div class="reward-day small"><span>DAY 02</span><div class="reward-glyph">✦</div><strong>Build momentum</strong><small>1 reward slot</small></div>
+          <div class="reward-day small"><span>DAY 03</span><div class="reward-glyph">✦</div><strong>Keep exploring</strong><small>1 reward slot</small></div>
+          <div class="reward-day small"><span>DAY 04</span><div class="reward-glyph">✦</div><strong>Stay the course</strong><small>1 reward slot</small></div>
+          <div class="reward-day medium"><span>DAY 05 <b>ENHANCED</b></span><div class="reward-glyph">✦ ✦</div><strong>Double discovery</strong><small>2 reward slots</small></div>
+          <div class="reward-day medium"><span>DAY 06 <b>ENHANCED</b></span><div class="reward-glyph">✦ ✦</div><strong>Two more treasures</strong><small>2 reward slots</small></div>
+          <div class="reward-day grand"><span>DAY 07 <b>GRAND FINALE</b></span><div class="grand-center"><div class="grand-symbol">✧</div><div><strong>The seventh-day celebration</strong><p>Three reward slots. The climax of a full week of play.</p></div></div><small>3 reward slots · Contents to be announced</small></div>
+        </div>
+        <div class="section-caption published-head"><div><span class="micro-label">OFFICIALLY PUBLISHED</span><h2>Reward announcements</h2></div><a href="#calendar" class="text-link">View calendar →</a></div><div id="rewardAnnouncements" class="announcements" aria-live="polite"></div>
+        <div class="caution"><strong>About reward timing</strong><p>This page describes the agreed reward-layout concept, not a promise of active daily rewards. Dates, eligibility, contents and in-game claim rules will appear only when officially published.</p></div>
+      </div>
+    </section>
+    <section class="page" id="development" aria-labelledby="dev-title" hidden>
+      <div class="shell page-heading"><p class="eyebrow"><span class="rule"></span> FROM IDEA TO INTERACTIVE WORLD</p><h1 id="dev-title">The work behind<br><em>the world.</em></h1><p>Follow Novabia’s development themes as they move toward playable milestones. These are project workstreams, not claims that a specific milestone has shipped.</p></div>
+      <div class="shell section-body"><div class="section-caption"><div><span class="micro-label">OUR CORE WORKSTREAMS</span><h2>Built layer by layer</h2></div><span class="draft-tag">DATES PUBLISHED SEPARATELY</span></div>
+        <div class="workstream-grid">
+          <article class="workstream"><span>01 / WORLD</span><div class="work-icon">◈</div><h3>Provincial journeys</h3><p>Distinct Elemental, Landscape, and Kinetic starting routes, each shaped by its own conflict and objectives.</p><small>STORY & QUEST DESIGN</small></article>
+          <article class="workstream"><span>02 / COMPANIONS</span><div class="work-icon">✧</div><h3>Evolution & affinity</h3><p>Branching forms, type interactions, and the Heir–Tutor teaching process behind Stage 3 evolution.</p><small>CREATURE SYSTEMS</small></article>
+          <article class="workstream"><span>03 / BATTLE</span><div class="work-icon">⚔</div><h3>Combat & cheers</h3><p>Turn-based decisions, tactical affinities, and companion support abilities beyond direct attacks.</p><small>GAMEPLAY SYSTEMS</small></article>
+          <article class="workstream"><span>04 / PROGRESSION</span><div class="work-icon">▤</div><h3>Caravan & supplies</h3><p>Companion care, gear, training books, instruments, supply management and progression systems.</p><small>PLAYER EXPERIENCE</small></article>
+          <article class="workstream"><span>05 / BUILD</span><div class="work-icon">⌘</div><h3>Browser vertical slice</h3><p>A Godot browser build for players to test core interactions and provide practical feedback.</p><small>TECHNOLOGY & DELIVERY</small></article>
+          <article class="workstream"><span>06 / COMMUNITY</span><div class="work-icon">✦</div><h3>Feedback & iteration</h3><p>Evaluate usability, clarity, difficulty, and companion attachment through structured player feedback.</p><small>VALIDATION</small></article>
+        </div>
+        <div class="section-caption published-head"><div><span class="micro-label">TIMED UPDATES</span><h2>Development milestones</h2></div><a href="#calendar" class="text-link">Browse the calendar →</a></div><div id="devAnnouncements" class="announcements" aria-live="polite"></div>
+        <div class="lower-band inner"><div><span class="micro-label">HELP SHAPE NOVABIA</span><h2>Play. Observe. Tell us.</h2><p>We’re collecting player impressions through the official tester questionnaire.</p></div><div class="band-actions"><a class="btn btn-gold" href="https://docs.google.com/forms/d/e/1FAIpQLSfmMCT3sIPX58XtDPNlVVBDko5IoXiEAiZLQg-_gIgYaRyeRQ/viewform" target="_blank" rel="noopener noreferrer">Tester survey ↗</a></div></div>
+      </div>
+    </section>
+    <section class="page" id="system" aria-labelledby="system-title" hidden>
+      <div class="shell page-heading"><p class="eyebrow"><span class="rule"></span> THE SYSTEM UNDER THE CHRONICLE</p><h1 id="system-title">Time, given<br><em>a new rhythm.</em></h1><p>This site uses the proposed Five Years Leap Week (5YLW) model: thirteen identical 28-day months, with a full extra week inserted in qualifying years.</p></div>
+      <div class="shell section-body"><div class="principles"><div><strong>13</strong><span>NUMBERED MONTHS</span></div><div><strong>28</strong><span>DAYS IN EACH MONTH</span></div><div><strong>07</strong><span>DAYS IN A LEAP WEEK</span></div><div><strong>364</strong><span>DAYS IN A BASE YEAR</span></div></div>
+      <div class="guide-layout"><div class="guide-main"><span class="micro-label">HOW THE CALENDAR WORKS</span><h2>Four weeks. Every month.</h2><p>Each standard month begins on the same weekday and contains four uninterrupted weeks. The day-of-week sequence never skips a day.</p><div class="rules"><div><b>01</b><p><strong>Thirteen standard months</strong><span>Months 01–13 each contain exactly 28 days.</span></p></div><div><b>02</b><p><strong>A fourteenth month in leap years</strong><span>Qualifying years include the seven-day intercalary “Hany’s Week”.</span></p></div><div><b>03</b><p><strong>The Base-5 protocol</strong><span>Add a leap week for years divisible by 5; skip it for years divisible by 50; also skip when (year − 25) is divisible by 400.</span></p></div><div><b>04</b><p><strong>Our epoch</strong><span>Year 1, Month 01, Day 01 corresponds to December 21, 2025, the epoch specified in the 5YLW proposal.</span></p></div></div></div>
+      <div class="converter"><span class="micro-label">INTERACTIVE DATE CONVERTER</span><h3>Find your 5YLW date</h3><label for="gregorianInput">GREGORIAN DATE</label><input id="gregorianInput" type="date" min="2025-12-21" max="2120-12-31"><div class="conversion-result"><small>5YLW EQUIVALENT</small><strong id="convertedDate">—</strong><span id="convertedWeekday">—</span></div><button id="copyDate" type="button" class="btn btn-outline">Copy this date <span aria-hidden="true">⧉</span></button><p class="converter-info" id="converterMessage" role="status">This is a proposal-based converter, not an internationally adopted civil calendar.</p></div></div>
+      <p class="system-footnote">Implementation convention: 5YLW Year 1 starts on 21 December 2025; the leap protocol is applied to integer year numbers counted from that epoch. The proposed calendar’s 13 standard month names are not assigned, so this site displays Month 01–13.</p>
+      </div>
+    </section>
+    <section class="page" id="archive" aria-labelledby="archive-title" hidden>
+      <div class="shell page-heading"><p class="eyebrow"><span class="rule"></span> THE NOVABIA CHRONICLE</p><h1 id="archive-title">Every step<br><em>leaves a mark.</em></h1><p>Past published rewards, updates, and development milestones will be preserved here when they become available.</p></div>
+      <div class="shell section-body"><div class="archive-top"><div><span class="micro-label">PUBLISHED RECORD</span><h2>Chronicle archive</h2></div><select id="archiveFilter" aria-label="Filter archived updates"><option value="all">All categories</option><option value="reward">Rewards</option><option value="development">Development</option><option value="update">Announcements</option></select></div><div id="archiveList" class="archive-list" aria-live="polite"></div><div class="archive-guide"><div><span class="micro-label">CROSS THE PROVINCES</span><h3>There's more to discover.</h3><p>Learn about the game's world, read the investor thesis, or try the current build.</p></div><div><a href="https://novabia.dev/" target="_blank" rel="noopener noreferrer">Explore Novabia ↗</a><a href="https://eip.novabia.dev/" target="_blank" rel="noopener noreferrer">Investor portal ↗</a><a href="https://play.novabia.dev/" target="_blank" rel="noopener noreferrer">Play the game ↗</a></div></div></div>
+    </section>
+  </main>
+  <footer class="footer"><div class="shell footer-inner"><div class="footer-logo"><img src="favicon.png" alt="" width="38" height="38"><span><strong>NOVABIA</strong><small>THE CHRONICLE</small></span></div><p>© <span id="copyrightYear">2026</span> Novabia. A world in the making.</p><div class="footer-links"><a href="https://novabia.dev/">Home</a><a href="https://play.novabia.dev/">Play</a><a href="https://eip.novabia.dev/">EIP</a><a href="https://docs.google.com/forms/d/e/1FAIpQLSfmMCT3sIPX58XtDPNlVVBDko5IoXiEAiZLQg-_gIgYaRyeRQ/viewform" target="_blank" rel="noopener noreferrer">Feedback</a></div></div></footer>
+</body>
+</html>
