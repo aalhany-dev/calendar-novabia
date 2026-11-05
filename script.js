@@ -1,5 +1,5 @@
 'use strict';
-/** Novabia Chronicle: all sections are client-side and GitHub Pages compatible. */
+/** Novabia Chronicle: clean-path GitHub Pages routes, fully client-side. */
 const MS_DAY = 86400000;
 const EPOCH_MS = Date.UTC(2025, 11, 21);
 // Year 2026 begins at the December 2025 epoch; 5YLW years use civil-style year labels.
@@ -59,18 +59,45 @@ function eventsForDay(y,m,d) {return allEvents.filter(e=>e.year === y && e.month
 function eventsByKind(kind) {return allEvents.filter(e=>e.kind===kind).sort(sortEvents);}
 function sortEvents(a,b) {return toGregorianUTC(b.year,b.month,b.day)-toGregorianUTC(a.year,a.month,a.day);}
 
+// Clean URL routes. Each route has a real index.html for direct GitHub Pages loads.
+const ROUTE_PATHS = Object.freeze({calendar:'/',rewards:'/rewards/',development:'/development/',system:'/system/',archive:'/archive/'});
+function activeRoute() {
+  // Keep previously shared links such as /#rewards working; upgrade their URL.
+  const legacyTab = location.hash.slice(1);
+  if (TABS.includes(legacyTab)) {
+    history.replaceState(null, '', ROUTE_PATHS[legacyTab] + location.search);
+    return legacyTab;
+  }
+  const path = location.pathname.replace(/\\/g, '/').replace(/\/index\\.html$/, '/').replace(/\\/?$/, '/');
+  return TABS.find(tab => ROUTE_PATHS[tab] === path) || 'calendar';
+}
 function showPage() {
-  const requested = decodeURIComponent(location.hash.replace(/^#/,''));
-  const active = TABS.includes(requested) ? requested : 'calendar';
+  const active = activeRoute();
   document.querySelectorAll('main > .page').forEach(p => {p.hidden = p.id !== active;});
   document.querySelectorAll('[data-tab]').forEach(a => a.getAttribute('data-tab') === active ? a.setAttribute('aria-current','page') : a.removeAttribute('aria-current'));
   $('primaryNav').classList.remove('open');
   $('menuToggle').setAttribute('aria-expanded','false');
   $('menuToggle').setAttribute('aria-label','Open navigation');
   document.title = `${({calendar:'This Month',rewards:'Rewards',development:'Development',system:'The 5YLW System',archive:'Archive'})[active]} | Novabia Calendar`;
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if (canonical) canonical.href = new URL(ROUTE_PATHS[active], location.origin).href;
+  const ogUrl = document.querySelector('meta[property="og:url"]');
+  if (ogUrl) ogUrl.content = new URL(ROUTE_PATHS[active], location.origin).href;
   window.scrollTo(0,0);
 }
-window.addEventListener('hashchange',showPage);
+// In-site navigation keeps the page loaded while preserving direct-openable paths.
+document.querySelectorAll('a[href]').forEach(link => {
+  const target = new URL(link.href);
+  if (target.origin !== location.origin || !Object.values(ROUTE_PATHS).includes(target.pathname)) return;
+  link.addEventListener('click', event => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.target || link.hasAttribute('download')) return;
+    event.preventDefault();
+    if (location.pathname !== target.pathname || location.hash) history.pushState(null, '', target.pathname);
+    showPage();
+  });
+});
+window.addEventListener('popstate', showPage);
+window.addEventListener('hashchange', () => { if (TABS.includes(location.hash.slice(1))) showPage(); });
 $('menuToggle').addEventListener('click',()=>{
   const open = $('primaryNav').classList.toggle('open');
   $('menuToggle').setAttribute('aria-expanded',String(open));
