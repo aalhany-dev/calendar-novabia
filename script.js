@@ -68,7 +68,9 @@ function activeRoute() {
     history.replaceState(null, '', ROUTE_PATHS[legacyTab] + location.search);
     return legacyTab;
   }
-  const path = location.pathname.replace(/\\/g, '/').replace(/\/index\\.html$/, '/').replace(/\\/?$/, '/');
+  const rawPath = location.pathname;
+  const pathWithoutIndex = rawPath.endsWith('/index.html') ? rawPath.slice(0, -'index.html'.length) : rawPath;
+  const path = pathWithoutIndex.endsWith('/') ? pathWithoutIndex : `${pathWithoutIndex}/`;
   return TABS.find(tab => ROUTE_PATHS[tab] === path) || 'calendar';
 }
 function showPage() {
