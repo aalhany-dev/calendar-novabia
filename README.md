@@ -1,6 +1,22 @@
 # Novabia Chronicle — calendar.novabia.dev
 
-A complete static website compatible with GitHub Pages. The root HTML and the four clean-path route entry pages (`rewards/index.html`, `development/index.html`, `system/index.html`, `archive/index.html`) enable direct links on GitHub Pages without hashes. All share `styles.css`, `script.js`, and `schedule-data.js`; keep route HTML in sync if changing the shared page structure. No backend is required.
+The source for **https://calendar.novabia.dev/**, Novabia's public development chronicle and 5 Years Leap Week (5YLW) calendar. It is a static GitHub Pages site with clean, directly loadable page URLs—no `#` fragments and no server-side backend.
+
+## Public pages and routes
+
+| Page | Public URL | GitHub Pages entry point |
+| --- | --- | --- |
+| This Month | [`/`](https://calendar.novabia.dev/) | `index.html` |
+| Rewards | [`/rewards/`](https://calendar.novabia.dev/rewards/) | `rewards/index.html` |
+| Development | [`/development/`](https://calendar.novabia.dev/development/) | `development/index.html` |
+| The 5YLW System | [`/system/`](https://calendar.novabia.dev/system/) | `system/index.html` |
+| Archive | [`/archive/`](https://calendar.novabia.dev/archive/) | `archive/index.html` |
+
+All five HTML pages use shared `/styles.css`, `/script.js`, and `/schedule-data.js`. The navigation uses browser History API for smooth transitions; GitHub Pages can also load or refresh each route directly because every subpath contains its own `index.html`.
+
+Legacy bookmarks such as `https://calendar.novabia.dev/#rewards` are recognized and upgraded to the corresponding clean URL. The `#main` skip link remains an intentional accessibility anchor, not a page route.
+
+**Maintenance note:** The five HTML entry points share page markup. If changing navigation, section content, assets, or layout, keep them synchronized; the only intended differences are the initial visible section and route-specific canonical URL, Open Graph URL, and page title.
 
 ## What is included
 
@@ -62,17 +78,24 @@ Possible status strings: `announced`, `planned`, `in_progress`, `complete`, `del
 
 If you prefer planning in Excel, keep a private workbook with the columns `id, year, month, day, kind, title, description, status, url`, then export verified entries into `schedule-data.js`. Static GitHub Pages cannot securely accept private submissions from visitors without an external service.
 
-## Deploying to GitHub Pages
+## Deployment and verification
 
-1. Create a new GitHub repository (for example `novabia-calendar`).
-2. Upload every file in this folder into the **repository root**.
-3. Open **Settings → Pages → Build and deployment**, choose **Deploy from a branch**, `main`, `/(root)`.
-4. Under **Settings → Pages → Custom domain**, add `calendar.novabia.dev`. The included `CNAME` file matches it.
-5. In your DNS provider, create a CNAME record: **Host/Name:** `calendar` → **Target:** `YOUR-GITHUB-USERNAME.github.io` (replace with your actual GitHub username, without any `https://` or path).
-6. Wait for DNS verification and enable **Enforce HTTPS** when available.
-7. Verify `https://calendar.novabia.dev/`, `/rewards/`, `/development/`, `/system/`, and `/archive/` as directly loaded pages.
+This repository is deployed from [`aalhany-dev/calendar-novabia`](https://github.com/aalhany-dev/calendar-novabia) with the `calendar.novabia.dev` custom domain declared in `CNAME`.
 
-Do not point the `calendar` DNS CNAME to `novabia.dev` unless your hosting/DNS configuration explicitly requires a different architecture. A custom domain is configured per GitHub Pages repository.
+1. Publish the `main` branch through **GitHub → Settings → Pages** (using the configured source).
+2. Preserve the domain mapping `calendar.novabia.dev`, HTTPS, the root `index.html`, and the four subdirectory `index.html` files.
+3. Test all five URLs in the table above by **opening them directly** in a fresh tab, then refreshing each. Confirm the intended section appears, images/styles/scripts load, and browser Back/Forward works.
+4. Confirm the old `/#rewards` (and other section-hash) URLs transition to their new paths.
+5. Verify that `https://calendar.novabia.dev/sitemap.xml` lists all five public pages and that `https://calendar.novabia.dev/robots.txt` points to that sitemap.
+
+### Search indexing and sitemap
+
+- The root [`sitemap.xml`](https://calendar.novabia.dev/sitemap.xml) includes exactly the five canonical public page URLs. They use trailing slashes for GitHub Pages directory routes.
+- The root [`robots.txt`](https://calendar.novabia.dev/robots.txt) allows crawling and references the sitemap.
+- Each page has a corresponding canonical link and `og:url`. When adding, renaming, or removing a route, update **the navigation, direct-load HTML, route map in `script.js`, canonical metadata, README, and sitemap together**.
+- Sitemap entries describe available pages—not announced rewards, forthcoming development releases, or individual calendar days. No speculative URLs or unverified `lastmod` dates are included.
+
+The canonical public path for the calendar itself is `/`; the old `/#calendar` format is maintained only for backward compatibility.
 
 ## Editing the look
 
